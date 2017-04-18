@@ -1,0 +1,18 @@
+{
+  "name": "staticFile",
+  "authors": [
+    "huangqingyi.cn"
+  ],
+  "description": "it is staticFile",
+  "main": "app.js",
+  "keywords": [
+    "Node.js",
+    "MongoDB"
+  ],
+  "license": "",
+  "homepage": "",
+  "ignore":"",
+  "dependencies": {
+    "bootstrap": "^3.3.7"
+  }
+}

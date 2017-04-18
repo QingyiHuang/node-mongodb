@@ -1,0 +1,31 @@
+extends ../layout
+
+block content
+  .container
+    .row
+      table.table.table-hover.table-bordered
+        thead
+          tr
+            th 项目
+            th 作者
+            th 简介
+            th 录入时间
+            th 分类
+            th 查看
+            th 更新
+            th 删除
+        tbody
+          each item in passages
+            //放入文章列表
+            tr(class="item-id-#{item._id}")
+              td #{item.title}
+              td #{item.editor}
+              td #{item.summary}
+              //moment引入就是管理时间的模块
+              td #{moment(item.meta.updateAt).format('MM/DD/YYYY')}
+              td #{item.file}
+              td: a(target="_blank",href="../passage/#{item._id}") 查看
+              td: a(target="_blank",href="../admin/update/#{item._id}") 修改
+              td
+                button.button.btn.btn-danger.del(type="button",data-id="#{item._id}") 删除
+  script(src="/static/js/admin.js")

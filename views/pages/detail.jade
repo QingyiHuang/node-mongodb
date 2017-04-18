@@ -1,0 +1,19 @@
+extends ../layout
+
+block content
+  .container
+    .row
+      .col-md-7
+        embed(src="#{passage.flash}" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" wmode="opaque" width="480" height="400")
+      .col-md-5
+        dl.dl-horizontal
+          dt 项目
+          dd= passage.title
+          dt 作者
+          dd= passage.editor
+          dt 简介
+          dd= passage.summary
+          dt 时间
+          dd= passage.time
+          dt 分类
+          dd= passage.file

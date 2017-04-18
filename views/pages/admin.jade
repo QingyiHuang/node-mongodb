@@ -1,0 +1,39 @@
+extends ../layout
+
+block content
+  .container
+    .row
+      form.form-horizontal(method="post",action="/admin/passage/new")
+        //隐藏的表单域，用来更新数据，储存数据id
+        input(type="hidden", name="passage[_id]", value="#{passage._id}")
+        .form-group
+          label.col-sm-3.control-label(for="inputTitle")文章名字
+          .col-sm-10
+            input#inputTitle.form-control(type="text",name="passage[title]",value="#{passage.title}")
+        .form-group
+          label.col-sm-3.control-label(for="inputEditor")作者
+          .col-sm-10
+            input#inputEditor.form-control(type="text",name="passage[editor]",value="#{passage.editor}")
+        .form-group
+          label.col-sm-3.control-label(for="inputSummary")简介
+          .col-sm-10
+            input#inputSummary.form-control(type="text",name="passage[summary]",value="#{passage.summary}")
+        .form-group
+          label.col-sm-3.control-label(for="inputTime")时间
+          .col-sm-10
+            input#inputTime.form-control(type="text",name="passage[time]",value="#{passage.time}")
+        .form-group
+          label.col-sm-3.control-label(for="inputFile")分类
+          .col-sm-10
+            input#inputFile.form-control(type="text",name="passage[file]",value="#{passage.file}")
+        .form-group
+          label.col-sm-3.control-label(for="inputPoster")封面图片
+          .col-sm-10
+            input#inputPoster.form-control(type="text",name="passage[poster]",value="#{passage.poster}")
+        .form-group
+          label.col-sm-3.control-label(for="inputFlash")视频来源
+          .col-sm-10
+            input#inputFlash.form-control(type="text",name="passage[flash]",value="#{passage.flash}")
+        .form-group
+          .col-sm-offset-2.col-sm-10
+          button.btn.btn-default(type='submit') 录入

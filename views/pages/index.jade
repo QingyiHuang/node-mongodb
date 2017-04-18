@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+  .container
+    .row
+      each item in passages
+        div(class="col-md-2")
+          //缩略图
+          div(class="thumbnail")
+            a(href="/passage/#{item._id}")
+              img(class="img-responsive" style="width:100%;height:100%;" src="#{item.poster}" alt="#{item.title}")
+            .caption
+              h3 #{item.title}
+              p: a.btn.btn-danger(href="/passage/#{item._id}",role="button") 进入学习
