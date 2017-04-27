@@ -1,7 +1,7 @@
 //加载node的express框架,path静态文件引入
 //表单初始化body-parser
 //引入mongoose工具
-//引入我们建立的mongoDB数据模型passage
+//引入我们建立的mongoDB数据模型passage和user 一个是存储网站的基本数据模型一个是用户的注册登录
 //(我们定义的PassageSchema通过mongoose编译生成的数据mongoDB数据模型passage)
 var express = require('express')
 var path = require('path')
@@ -9,10 +9,14 @@ var serveStatic = require('serve-static')
 var bodyParser = require('body-parser')
 var mongoose = require('mongoose')
 var passage = require('./models/passage.js')
+var User = require('./models/user.js')
+var cookieParser = require('cookie-parser')//浏览器缓存中间件
+var session = require('express-session')
 var _underscore = require('underscore') // _.extend用新对象里的字段替换老的字段
 var port = process.env.PORT || 3000//设置端口3000
 var app = express();//启动web服务器
 //用mongoose连接本地mongoDB，完成数据库连接,数据库名为shumei
+//mongodb 默认端口为27017
 mongoose.connect('mongodb://localhost:27017/shumei')
 /*  mongoose 简要知识点补充
 * mongoose模块构建在mongodb之上，提供了Schema[模式]、Model[模型]和Document[文档]对象，用起来更为方便。
@@ -29,7 +33,10 @@ app.set('views','./views/pages')//设置视图根目录
 app.set('view engine','jade')//设置默认模板引擎
 app.use('/static', express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.urlencoded({ extended:true}))
-
+app.use(cookieParser())
+app.use(session({
+	secret:'shumei'
+}))
 
 app.listen(port)//监听3000这个端口
 
@@ -52,14 +59,85 @@ app.get('/',function (req,res) {
 	})
 })
 
+//signup
+app.post('/user/signup',function(req,res){
+	//req.body 拿到表单里的user对象，还可以用 req.param('user')
+	var _user = req.body.user;
+	//mongodb 不允许name值重复
+	User.find({name:_user.name},function(err,user){
+		if(err){
+			console.log(err)
+		}
+/*		if(user){  //不知为什么会有逻辑错误
+			return res.redirect('/')
+		}*/else{
+			var user = new User(_user)
+			user.save(function(err,user){
+				if(err){
+					console.log(err)
+				}
+				//完成逻辑后重定向
+				res.redirect('/admin/userlist')
+			})
+		}
+	})
+
+})
+
+//signin page
+app.post('/user/signin',function(req,res){
+	var _user = req.body.user;
+	var name = _user.name;
+	var password = _user.password;
+
+	User.findOne({name:name},function(err,user){
+		if(err){
+			console.log(err)
+		}
+		if(!user){
+			return res.redirect('/')
+		}
+//这个密码对比逻辑我们在schema里面
+		user.comparePassword(password,function(err,isMatch){
+			if(err){
+				console.log(err)
+			}
+			if(isMatch){
+				//将用户登录状态加载到内存
+				//session 服务器客户端会话
+				req.session.user = user
+				return res.redirect('/')
+			}
+			else{
+				console.log('password is not matched')
+			}
+		})
+	})
+})
+
+
+//userlist page
+app.get('/admin/userlist',function (req,res) {
+
+	User.fetch(function(err,users){
+		if(err){
+			console.log(err)
+		}
+		res.render('userlist',{
+			title:'用户列表页面',
+			users:users
+		})
+	})
+})
+
 //detail page
 app.get('/passage/:id',function (req,res) {
-	//匹配到_id的值 通过req.params拿到id
+	//匹配到_id的值 通过req.params拿到id  (params是对body query 路由的三种方式的封装)
 	var id = req.params.id
 	//通过这个id来查询，这个方法在schema里面已经定义好
 	passage.findById(id,function(err,passage){
 		res.render('detail',{
-			title:'软通 '+ passage.title,
+			title:passage.title,
 			passage:passage
 		});
 	});
