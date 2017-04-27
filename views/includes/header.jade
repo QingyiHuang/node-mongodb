@@ -1,3 +1,56 @@
+nav(class="navbar navbar-inverse navbar-static-top" role="navigation")
+  div(class="container")
+    div(class="navbar-header")
+      a.navbar-brand(href="/") 慕课网
+    //-子元素右对齐
+    div
+      ul(class="nav navbar-nav")
+        li
+          a(href="/admin/list") 后台管理页面
+        li
+          a(href="/admin/passage") 后台录入页
+        li
+          a(href="/admin/userlist") 用户列表页面
+    p.navbar-text.navbar-right
+      //-不弹窗的登录页面 modal模态框
+      //data-target所指的元素以data-toggle指定的形式显示
+      a.navbar-link(href='#',data-toggle="modal",data-target="#signupModal") 注册
+      span &nbsp;|&nbsp;
+      a.navbar-link(href='#',data-toggle="modal",data-target="#signinModal") 登录
+//-制作模态窗口 for signup
+#signupModal.modal.fade
+  .modal-dialog
+    .modal-content
+      form(method="POST",action="/user/signup")
+        .modal-header 注册
+        .modal-body
+          .form-group
+            //-文字和控件绑定的label标签
+            label(for="signupName") 用户名
+            input(id="signupName" class="form-control" name="user[name]" type="text")
+          .form-group
+            label(for="signupPassword") 密码
+            input(id="signupPassword" class="form-control" name="user[password]" type="password")
+        .modal-footer
+          button(class="btn btn-default" type="button",data-dismiss="modal") 关闭
+          button(class="btn btn-success",type="submit") 注册
+//模态窗口 for signin
+#signinModal.modal.fade
+  .modal-dialog
+    .modal-content
+      form(method="POST",action="/user/signin")
+        .modal-header 登录
+        .modal-body
+          .form-group
+            //-文字和控件绑定的label标签
+            label(for="signinName") 用户名
+            input(id="signinName" class="form-control" name="user[name]" type="text")
+          .form-group
+            label(for="signinPassword") 密码
+            input(id="signinPassword" class="form-control" name="user[password]" type="password")
+        .modal-footer
+          button(class="btn btn-default" type="button",data-dismiss="modal") 关闭
+          button(class="btn btn-success",type="submit") 登录
 .container
   .row
     .page-header
